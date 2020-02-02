@@ -12,7 +12,7 @@
     <artifactId>spring-boot-example</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Spring Boot Best Practices</name>
-    <description>Spring Boot best practices</description>
+    <description>Spring Boot 2.x project structure and best practices</description>
 
     <properties>
         <java.version>1.8</java.version>
