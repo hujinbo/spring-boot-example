@@ -1,5 +1,26 @@
+# 应用名称
+spring.application.name: spring-boot-example
+
 # 激活指定环境的配置文件（dev开发、test测试、prod生产）
 spring.profiles.active: dev
 
 # 启用热部署
 spring.devtools.restart.enabled: true
+
+# 日志配置（按照日期+大小进行滚动）
+logging:
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p ${PID:- } [%t] %-40.40logger{39} : %m%n%wEx"
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %clr(%-5p) ${PID:- } [%t] %clr(%-40.40logger{39}){cyan} : %m%n%wEx"
+    rolling-file-name: ${logging.file.path}/${spring.application.name}_%d{yyyy-MM-dd}_%i.log.gz # 日志轮转文件名称格式
+  file:
+    path: logs            # 日志文件路径
+    name: ${logging.file.path}/${spring.application.name}.log # 日志文件名称（路径+名称）
+    max-size: 25MB        # 单个文件大小，超出后进行分割
+    max-history: 30       # 保留最近30天的日志
+    total-size-cap: 1GB   # 所有日志文件上限大小，超出后删除最早的日志
+  group:                  # 日志组
+    druid: druid.sql.DataSource, druid.sql.Connection, druid.sql.Statement, druid.sql.ResultSet
+  level:                  # 日志级别，可设置root、包、类、日志组
+    root: info
+    druid: info
