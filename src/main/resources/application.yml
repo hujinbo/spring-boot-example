@@ -11,9 +11,54 @@ spring.devtools.restart.enabled: true
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/springboot_example?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
-    username: root
-    password: hujinbo
+    url: jdbc:mysql://${datasource.host}:${datasource.port}/${datasource.database}?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
+    username: ${datasource.username}
+    password: ${datasource.password}
+    druid:
+      name: system                    # 数据源监控名称
+      initial-size: 3                 # 初始化连接数
+      min-idle: 3                     # 最小连接数
+      max-active: 20                  # 最大连接数
+      max-wait: 10000                 # 获取连接等待超时时间
+      time-between-eviction-runs-millis: 60000  # 每隔60秒检测需要关闭的空闲连接
+      min-evictable-idle-time-millis: 300000    # 连接保持空闲而不被驱逐的最小时间
+      validation-query: select 1      # 检测连接是否可用的SQL
+      test-while-idle: true           # 空闲时间大于timeBetweenEvictionRunsMillis，检测连接是否有效
+      test-on-borrow: false           # 获取连接时检测连接是否有效
+      test-on-return: false           # 归还连接时检测连接是否有效
+      keep-alive: true                # 对空闲连接保活
+      remove-abandoned: false         # 强行关闭长时间未归还的连接，怀疑连接泄漏再开启
+      remove-abandoned-timeout: 180   # 一个连接超过180秒，则认为连接异常并关闭该连接
+      pool-prepared-statements: false # 关闭PSCache，Oracle可开启
+      filter:
+        stat:
+          enabled: true               # 开启SQL监控
+          merge-sql: true             # 合并没有参数化的SQL
+          slow-sql-millis: 3000       # 超过3秒的标记为慢SQL
+          log-slow-sql: true          # 通过日志输出慢SQL
+        wall:
+          enabled: true               # 开启SQL注入防御
+          config:
+            alter-table-allow: false  # 不允许修改表
+            drop-table-allow: false   # 不允许删除表
+        slf4j:
+          enabled: true               # 开启日志
+          result-set-log-enabled: false             # 不记录JDBC执行结果
+          statement-executable-sql-log-enable: true # 记录JDBC执行的SQL
+      stat-view-servlet:
+        enabled: true                 # 开启监控页面
+        url-pattern: /druid/*         # 监控页地址
+        login-username: admin         # 用户名
+        login-password: hujinbo       # 密码
+        reset-enable: true            # 允许清空统计数据
+        allow: 127.0.0.1              # IP白名单
+      web-stat-filter:
+        enabled: true                 # 开启Web关联监控
+        url-pattern: /*               # 监控URL路径
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*" # 排除的URL
+        profile-enable: true          # 监控单个URL调用的sql列表
+        session-stat-enable: false    # 关闭session统计功能
+      aop-patterns: me.hujinbo.boot.example.service.*,me.hujinbo.boot.example.mapper.*  # Spring关联监控配置
 
 # 日志配置（按照日期+大小进行滚动）
 logging:

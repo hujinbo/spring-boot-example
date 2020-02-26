@@ -5,3 +5,11 @@ logging:
   level:
     root: info
     web: debug
+
+# 数据库配置
+datasource:
+  host: 127.0.0.1
+  port: 3306
+  database: springboot_example
+  username: root
+  password: hujinbo
